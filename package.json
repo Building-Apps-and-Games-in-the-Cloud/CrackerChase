@@ -1,0 +1,23 @@
+{
+  "name": "crackerchase",
+  "version": "1.0.0",
+  "description": "Cracker Chase in Phazer",
+  "main": "index.js",
+  "dependencies": {
+    "phaser": "^3.55.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase.git"
+  },
+  "author": "Rob Miles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase/issues"
+  },
+  "homepage": "https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase#readme"
+}
