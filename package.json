@@ -3,12 +3,9 @@
   "version": "1.0.0",
   "description": "Cracker Chase in Phazer",
   "main": "index.js",
-  "dependencies": {
-    "ejs": "^3.1.8",
-    "express": "^4.18.2",
-    "phaser": "^3.55.2"
-  },
+
   "scripts": {
+    "devstart": "nodemon crackerchase.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +17,14 @@
   "bugs": {
     "url": "https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase/issues"
   },
-  "homepage": "https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase#readme"
+  "homepage": "https://github.com/Building-Apps-and-Games-in-the-Cloud/CrackerChase#readme",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "phaser": "^3.55.2"
+  },  
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
+ 

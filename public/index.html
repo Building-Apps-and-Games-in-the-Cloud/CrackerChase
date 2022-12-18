@@ -1,59 +1,93 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
 </head>
+
 <body>
 
     <script>
-    var config = {
-        type: Phaser.AUTO,
-        width: 800,
-        height: 600,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 200 }
+    function getRandom(min, max) {
+      var range = max - min;
+      var result = Math.floor(Math.random() * range) + min;
+      return result;
+    }
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: {  }
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
             }
-        },
-        scene: {
-            preload: preload,
-            create: create
+        };
+
+        var game = new Phaser.Game(config);
+
+        var player;
+        var cursors;
+        var stars;
+
+        function preload() {
+            this.load.image('background', 'assets/images/background.png');
+            this.load.image('cheese', 'assets/images/cheese.png');
+            this.load.image('cracker', 'assets/images/cracker.png');
+            this.load.image('tomato', 'assets/images/redtomato.png');
         }
-    };
 
-    var game = new Phaser.Game(config);
+        function create() {
+            cursors = this.input.keyboard.createCursorKeys();
 
-    function preload ()
-    {
-//        this.load.setBaseURL('/public/assets/');
+            this.add.image(400, 300, 'background');
 
-        this.load.image('sky', 'assets/images/background.png');
-        this.load.image('logo', 'assets/images/cheese.png');
-        this.load.image('red', 'assets/images/cracker.png');
-    }
+            stars = this.physics.add.group({
+                key: 'cracker',
+                repeat: 11
+            });
 
-    function create ()
-    {
-        this.add.image(400, 300, 'sky');
+            stars.children.iterate(function (child) {
+                child.x=getRandom(0,800);
+                child.y= getRandom(0,600);
+            });
+ 
+            player = this.physics.add.sprite(400, 300, 'cheese');
+            player.setCollideWorldBounds(true);
+       }
 
-        var particles = this.add.particles('red');
+        function update() {
+            if (cursors.left.isDown) {
+                player.setVelocityX(-160);
+            }
+            else if (cursors.right.isDown) {
+                player.setVelocityX(160);
+            }
+            else {
+                player.setVelocityX(0);
+            }
 
-        var emitter = particles.createEmitter({
-            speed: 100,
-            scale: { start: 1, end: 0 },
-            blendMode: 'ADD'
-        });
+            if (cursors.up.isDown) {
+                player.setVelocityY(-160);
+            }
+            else if (cursors.down.isDown) {
+                player.setVelocityY(160);
+            }
+            else {
+                player.setVelocityY(0);
+            }
 
-        var logo = this.physics.add.image(400, 100, 'logo');
 
-        logo.setVelocity(100, 200);
-        logo.setBounce(1, 1);
-        logo.setCollideWorldBounds(true);
-
-        emitter.startFollow(logo);
-    }
+        }
     </script>
 
 </body>
+
 </html>
