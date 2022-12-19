@@ -8,11 +8,11 @@
 <body>
 
     <script>
-    function getRandom(min, max) {
-      var range = max - min;
-      var result = Math.floor(Math.random() * range) + min;
-      return result;
-    }
+        function getRandom(min, max) {
+            var range = max - min;
+            var result = Math.floor(Math.random() * range) + min;
+            return result;
+        }
 
         var config = {
             type: Phaser.AUTO,
@@ -21,7 +21,7 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: {  }
+                    gravity: {}
                 }
             },
             scene: {
@@ -33,9 +33,10 @@
 
         var game = new Phaser.Game(config);
 
-        var player;
+        var cheese;
         var cursors;
-        var stars;
+        var crackers;
+        var tomatoes;
 
         function preload() {
             this.load.image('background', 'assets/images/background.png');
@@ -44,45 +45,72 @@
             this.load.image('tomato', 'assets/images/redtomato.png');
         }
 
+        function eatCracker(player,star){
+            console.log("bang");
+            star.x=-100;
+            star.y = -100;
+        }
+
         function create() {
             cursors = this.input.keyboard.createCursorKeys();
 
             this.add.image(400, 300, 'background');
 
-            stars = this.physics.add.group({
+            crackers = this.physics.add.group({
                 key: 'cracker',
-                repeat: 11
+                repeat: 1
             });
 
-            stars.children.iterate(function (child) {
-                child.x=getRandom(0,800);
-                child.y= getRandom(0,600);
+            crackers.children.iterate(function (child) {
+                child.x = getRandom(0, 800);
+                child.y = getRandom(0, 600);
             });
- 
-            player = this.physics.add.sprite(400, 300, 'cheese');
-            player.setCollideWorldBounds(true);
-       }
+
+            tomatoes = this.physics.add.group({
+                key: 'tomato',
+                repeat: 4
+            });
+
+            let tomatoNum = 1;
+
+            tomatoes.children.iterate(function (child) {
+                child.x = -100 * tomatoNum;
+                child.y = -100 * tomatoNum;
+                tomatoNum = tomatoNum + 1;
+            });
+
+            cheese = this.physics.add.sprite(400, 300, 'cheese');
+            cheese.setCollideWorldBounds(true);
+            this.physics.add.overlap(cheese, crackers, eatCracker, null, this);
+        }
 
         function update() {
             if (cursors.left.isDown) {
-                player.setVelocityX(-160);
+                cheese.setVelocityX(-160);
             }
             else if (cursors.right.isDown) {
-                player.setVelocityX(160);
+                cheese.setVelocityX(160);
             }
             else {
-                player.setVelocityX(0);
+                cheese.setVelocityX(0);
             }
 
             if (cursors.up.isDown) {
-                player.setVelocityY(-160);
+                cheese.setVelocityY(-160);
             }
             else if (cursors.down.isDown) {
-                player.setVelocityY(160);
+                cheese.setVelocityY(160);
             }
             else {
-                player.setVelocityY(0);
+                cheese.setVelocityY(0);
             }
+
+            tomatoes.children.iterate(function (child) {
+                child.x = -100 * tomatoNum;
+                child.y = -100 * tomatoNum;
+                tomatoNum = tomatoNum + 1;
+            });
+
 
 
         }
