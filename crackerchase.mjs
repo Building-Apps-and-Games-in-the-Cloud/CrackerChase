@@ -1,7 +1,5 @@
 import express from 'express';
 
-import {index} from './routes/index.mjs';
-
 // Create the express application
 const app = express();
 
@@ -12,7 +10,6 @@ app.use(express.urlencoded({ extended: false }));
 app.set('view-engine', 'ejs');
 
 app.use (express.static('public'));
-
 
 // Connect the route handlers to the routes
 //app.use('/index.html', index);

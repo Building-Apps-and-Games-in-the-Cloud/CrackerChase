@@ -37,28 +37,61 @@
         var cursors;
         var crackers;
         var tomatoes;
+        var tomatoAccelleration = 25;
+        var gameOver = false;
+        var score = 0;
+        var scoreText;
+        var scoreTextBg;
+        var burp;
 
         function preload() {
             this.load.image('background', 'assets/images/background.png');
             this.load.image('cheese', 'assets/images/cheese.png');
             this.load.image('cracker', 'assets/images/cracker.png');
             this.load.image('tomato', 'assets/images/redtomato.png');
+            this.load.audio('burp', ['assets/sounds/burp.ogg','assets/sounds/burp.mp3']);
         }
 
-        function eatCracker(player,star){
-            console.log("bang");
-            star.x=-100;
-            star.y = -100;
+        function showMessage(message) {
+            scoreTextBg.setText(message);
+            scoreText.setText(message);
+        }
+
+        function eatCracker(cheese, cracker) {
+            burp.play();
+            score += 10;
+            showMessage(`          Score:  ${score}`);
+            cracker.disableBody(true, true);
+
+            if (crackers.countActive(true) === 0){
+                placeCrackers();
+            }
+        }
+
+        function gameIsOver(cheese, tomato) {
+            showMessage(`    GAME OVER Score: ${score}`);
+            cheese.disableBody(true,true);
+            gameOver = true;
+        }
+
+        function placeCrackers(){
+            crackers.children.iterate(function (child) {
+                child.x = getRandom(0, 800);
+                child.y = getRandom(0, 600);
+                child.enableBody(true, child.x, child.y, true, true);
+            });
         }
 
         function create() {
             cursors = this.input.keyboard.createCursorKeys();
 
+            burp = this.sound.add('burp');
+
             this.add.image(400, 300, 'background');
 
             crackers = this.physics.add.group({
                 key: 'cracker',
-                repeat: 1
+                repeat: 20
             });
 
             crackers.children.iterate(function (child) {
@@ -68,23 +101,45 @@
 
             tomatoes = this.physics.add.group({
                 key: 'tomato',
-                repeat: 4
+                repeat: 3   
             });
 
             let tomatoNum = 1;
 
             tomatoes.children.iterate(function (child) {
-                child.x = -100 * tomatoNum;
-                child.y = -100 * tomatoNum;
+                child.x = 100 * tomatoNum;
+                child.y = 100 * tomatoNum;
                 tomatoNum = tomatoNum + 1;
+                child.body.bounce.x = 1.0;
+                child.body.bounce.y = 1.0;
+                child.setCollideWorldBounds(true);
             });
+
+            placeCrackers();
 
             cheese = this.physics.add.sprite(400, 300, 'cheese');
             cheese.setCollideWorldBounds(true);
+
             this.physics.add.overlap(cheese, crackers, eatCracker, null, this);
+            this.physics.add.overlap(cheese, tomatoes, gameIsOver, null, this);
+
+            scoreTextBg = this.add.text(16, 16, '', { fontSize: '45px', fill: '#000' });
+            scoreText = this.add.text(18, 18, '', { fontSize: '45px', fill: '#FFF' });
         }
 
         function update() {
+
+            if (gameOver) {
+                return;
+            }
+
+            tomatoes.children.iterate(function (child) {
+                if (child.x > cheese.x) child.body.acceleration.x = -tomatoAccelleration;
+                if (child.x < cheese.x) child.body.acceleration.x = tomatoAccelleration;
+                if (child.y > cheese.y) child.body.acceleration.y = -tomatoAccelleration;
+                if (child.y < cheese.y) child.body.acceleration.y = tomatoAccelleration;
+            });
+
             if (cursors.left.isDown) {
                 cheese.setVelocityX(-160);
             }
@@ -104,15 +159,6 @@
             else {
                 cheese.setVelocityY(0);
             }
-
-            tomatoes.children.iterate(function (child) {
-                child.x = -100 * tomatoNum;
-                child.y = -100 * tomatoNum;
-                tomatoNum = tomatoNum + 1;
-            });
-
-
-
         }
     </script>
 
