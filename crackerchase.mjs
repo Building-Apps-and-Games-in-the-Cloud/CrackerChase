@@ -12,7 +12,6 @@ app.set('view-engine', 'ejs');
 app.use (express.static('public'));
 
 // Connect the route handlers to the routes
-//app.use('/index.html', index);
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
